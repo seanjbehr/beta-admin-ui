@@ -1,16 +1,19 @@
 {
-  "name": "",
+  "name": "beta-admin-api",
   "version": "1.0.0",
-  "description": "",
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0"
+    "@azure/functions": "^4.7.3"
   },
   "devDependencies": {
     "azure-functions-core-tools": "^4.x"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

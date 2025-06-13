@@ -46,3 +46,42 @@ __pycache__/
 __blobstorage__
 __queuestorage__
 __azurite_db*__.json
+
+# Dependencies
+/node_modules
+/beta-admin-api/node_modules
+
+# Production build files
+/build
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Azure Functions
+/beta-admin-api/bin
+/beta-admin-api/obj
+/beta-admin-api/.vscode
+/beta-admin-api/local.settings.json
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
