@@ -11,6 +11,7 @@ app.http('HttpTrigger1', {
     authLevel: 'function',
     route: 'users/{id?}', // This allows us to handle requests with or without an ID
     handler: async (request, context) => {
+        console.log(`Http function processed request for url "${request.url}"`);
         context.log(`Http function processed request for url "${request.url}"`);
 
         const method = request.method;
@@ -55,7 +56,7 @@ app.http('HttpTrigger1', {
                     return { status: 400, body: "Invalid request method" };
             }
         } catch (error) {
-            context.log.error('Error:', error);
+            context.log('Error: ${error.message}');
             return { status: 500, body: "An error occurred while processing the request" };
         }
     }

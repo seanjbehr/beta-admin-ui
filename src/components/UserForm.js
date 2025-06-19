@@ -11,7 +11,7 @@ const UserForm = ({ user, onSave }) => {
     setError(null);
     try {
       if (user) {
-        await updateUser(user.id, { email, isApproved });
+        await updateUser(user.rowKey, { email, isApproved });
       } else {
         await createUser({ email, isApproved });
       }

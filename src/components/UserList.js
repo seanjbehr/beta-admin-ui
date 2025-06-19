@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { fetchUsers, createUser, updateUser, deleteUser } from '../services/api';
 import UserForm from './UserForm';
-import DeleteUser from './DeleteUser';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -8,20 +8,14 @@ const UserList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    loadUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  const loadUsers = async () => {
     try {
       setLoading(true);
-      setError(null);
-    // TODO: Implement API call to fetch users
-    // For now, we'll use dummy data
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setUsers([
-      { id: '1', email: 'user1@example.com', isApproved: true },
-      { id: '2', email: 'user2@example.com', isApproved: false },
-    ]);
+      const fetchedUsers = await fetchUsers();
+      setUsers(fetchedUsers);
     } catch (err) {
       setError('Failed to fetch users');
     } finally {
@@ -29,51 +23,61 @@ const UserList = () => {
     }
   };
 
-  const tableStyle = {
-    width: '100%',
-    borderCollapse: 'collapse',
-    marginTop: '20px',
+  const handleCreateUser = async (userData) => {
+    try {
+      await createUser(userData);
+      loadUsers();
+    } catch (err) {
+      setError('Failed to create user');
+    }
   };
 
-    const thTdStyle = {
-    border: '1px solid #ddd',
-    padding: '8px',
-    textAlign: 'left',
+  const handleUpdateUser = async (id, userData) => {
+    try {
+      await updateUser(id, userData);
+      loadUsers();
+    } catch (err) {
+      setError('Failed to update user');
+    }
   };
 
-    if (loading) {
-    return <div>Loading users...</div>;
-  }
+  const handleDeleteUser = async (id) => {
+    try {
+      await deleteUser(id);
+      loadUsers();
+    } catch (err) {
+      setError('Failed to delete user');
+    }
+  };
 
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
+  if (loading) return <div>Loading users...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
       <h2>Beta Users</h2>
-      <table style ={tableStyle}>
+      <UserForm onSave={handleCreateUser} />
+      <table>
         <thead>
           <tr>
-            <th style={thTdStyle}>Email</th>
-            <th style={thTdStyle}>Approved</th>
-            <th style={thTdStyle}>Actions</th>
+            <th>Email</th>
+            <th>Approved</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map(user => (
-            <tr key={user.id}>
-              <td style={thTdStyle}>{user.email}</td>
-              <td style={thTdStyle}>{user.isApproved? 'Yes' : 'No'}</td>
-              <td style={thTdStyle}>
-                <UserForm user={user} onSave={fetchUsers} />
-                <DeleteUser userId={user.id} onDelete={fetchUsers} />
+            <tr key={user.rowKey}>
+              <td>{user.email}</td>
+              <td>{user.isApproved ? 'Yes' : 'No'}</td>
+              <td>
+                <UserForm user={user} onSave={(userData) => handleUpdateUser(user.rowKey, userData)} />
+                <button onClick={() => handleDeleteUser(user.rowKey)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <UserForm onSave={fetchUsers} />
     </div>
   );
 };

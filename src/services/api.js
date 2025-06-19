@@ -1,9 +1,7 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:7071/api';
-const API_KEY = process.env.REACT_APP_API_KEY;
 
 const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': API_KEY
+  'Content-Type': 'application/json'
 };
 
 export const fetchUsers = async () => {
