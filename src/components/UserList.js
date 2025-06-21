@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchUsers, createUser, updateUser, deleteUser } from '../services/api';
 import UserForm from './UserForm';
+import { fetchUsers, deleteUser } from '../services/api';
+import './UserList.css'; // We'll create this CSS file next
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -25,59 +26,48 @@ const UserList = () => {
 
   const handleCreateUser = async (userData) => {
     try {
-      await createUser(userData);
-      loadUsers();
+      // Implement user creation logic here
+      await loadUsers(); // Reload the list after creating
     } catch (err) {
       setError('Failed to create user');
-    }
-  };
-
-  const handleUpdateUser = async (id, userData) => {
-    try {
-      await updateUser(id, userData);
-      loadUsers();
-    } catch (err) {
-      setError('Failed to update user');
     }
   };
 
   const handleDeleteUser = async (id) => {
     try {
       await deleteUser(id);
-      loadUsers();
+      await loadUsers(); // Reload the list after deleting
     } catch (err) {
       setError('Failed to delete user');
     }
   };
 
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="loading">Loading users...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
-    <div>
-      <h2>Beta Users</h2>
-      <UserForm onSave={handleCreateUser} />
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Approved</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="user-management">
+      <div className="user-form-container">
+        <h2>Add New User</h2>
+        <UserForm onSave={handleCreateUser} />
+      </div>
+      <div className="user-list-container">
+        <h2>Beta Users</h2>
+        <ul className="user-list">
           {users.map(user => (
-            <tr key={user.rowKey}>
-              <td>{user.email}</td>
-              <td>{user.isApproved ? 'Yes' : 'No'}</td>
-              <td>
-                <UserForm user={user} onSave={(userData) => handleUpdateUser(user.rowKey, userData)} />
-                <button onClick={() => handleDeleteUser(user.rowKey)}>Delete</button>
-              </td>
-            </tr>
+            <li key={user.rowKey} className="user-item">
+              <span className="user-email">{user.email}</span>
+              <span className="user-approved">{user.isApproved ? 'Approved' : 'Not Approved'}</span>
+              <button 
+                className="delete-button" 
+                onClick={() => handleDeleteUser(user.rowKey)}
+              >
+                Delete
+              </button>
+            </li>
           ))}
-        </tbody>
-      </table>
+        </ul>
+      </div>
     </div>
   );
 };

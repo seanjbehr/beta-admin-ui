@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createUser, updateUser } from '../services/api';
+import './UserForm.css'; // Create this file for UserForm specific styles
 
 const UserForm = ({ user, onSave }) => {
   const [email, setEmail] = useState(user ? user.email : '');
@@ -28,7 +29,7 @@ const UserForm = ({ user, onSave }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="user-form">
       <input
         type="email"
         value={email}

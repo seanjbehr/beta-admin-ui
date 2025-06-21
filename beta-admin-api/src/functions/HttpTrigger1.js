@@ -6,6 +6,18 @@ const tableName = "BetaUsers";
 
 const tableClient = TableClient.fromConnectionString(connectionString, tableName);
 
+// Add this code to create the table if it doesn't exist
+async function ensureTableExists() {
+  try {
+    await tableClient.createTable();
+    console.log(`Table ${tableName} created or already exists.`);
+  } catch (error) {
+    console.error(`Error creating table: ${error.message}`);
+  }
+}
+
+// Call this function before handling any requests
+ensureTableExists();
 app.http('HttpTrigger1', {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     authLevel: 'function',
@@ -56,8 +68,8 @@ app.http('HttpTrigger1', {
                     return { status: 400, body: "Invalid request method" };
             }
         } catch (error) {
-            context.log('Error: ${error.message}');
-            return { status: 500, body: "An error occurred while processing the request" };
-        }
+    context.log(`Error: ${error.message}`);
+    return { status: 500, body: `An error occurred while processing the request: ${error.message}` };
+}
     }
 });
